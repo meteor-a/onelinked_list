@@ -62,9 +62,17 @@ int AllocateLeaseMemoryList(SinglyLinkedList* sLinkList);
  * 
  * @param sLinkList - pointer to the singly link list
  * @param index - index, before which need to find index
- * @return int - omdex of previous elem
+ * @return int - index of previous elem
  */
 int FindPreviousIndex(SinglyLinkedList* sLinkList, int index);
+
+/**
+ * @brief Prototype of finding empty index in singly link list
+ * 
+ * @param sLinkList - pointer to the singly link list
+ * @return int - index of empty elem
+ */
+int FindEmptyIndex(SinglyLinkedList* sLinkList);
 
 /*------------------------------------------------------------------------------------------------------------------*/
 
@@ -122,15 +130,16 @@ int SinglyLinkedListConstructor(SinglyLinkedList* sLinkList) {
 
     InizializeData(sLinkList);
 
-    sLinkList->head->index = 0;
-
     return EXIT_SUCCESS;
 }
 
 int InizializeData(SinglyLinkedList* sLinkList) {
     SinglyLinkListOK(sLinkList);
 
-
+    for (int cur_ind = 0; cur_ind < sLinkList->capacity; ++cur_ind) {
+        sLinkList->list[cur_ind].elem  = 0;
+        sLinkList->list[cur_ind].index = -1;
+    }
 
     return EXIT_SUCCESS;
 }
@@ -166,8 +175,7 @@ int SinglyLinkedListDestructor(SinglyLinkedList* sLinkList) {
 int SinglyLinkedListPushTail(SinglyLinkedList* sLinkList, SINGLY_LINKED_LIST val_push) {
     SinglyLinkListOK(sLinkList);
 
-    SINGLY_LINKED_LIST index_find_empty = 0;
-    while(sLinkList->list[index_find_empty].index != -1) ++index_find_empty;
+    int index_find_empty = FindEmptyIndex(sLinkList);
 
     sLinkList->list[sLinkList->tail->index].index = index_find_empty;
 
@@ -195,8 +203,7 @@ int SinglyLinkedListPushTail(SinglyLinkedList* sLinkList, SINGLY_LINKED_LIST val
 int SinglyLinkedListPushHead(SinglyLinkedList* sLinkList, SINGLY_LINKED_LIST val_push) {
     SinglyLinkListOK(sLinkList);
 
-    SINGLY_LINKED_LIST index_find_empty = 0;
-    while(sLinkList->list[index_find_empty].index != -1) ++index_find_empty;
+    int index_find_empty = FindEmptyIndex(sLinkList);
 
     sLinkList->list[index_find_empty].index       = sLinkList->head->index;
     sLinkList->list[sLinkList->head->index].index = index_find_empty;
@@ -241,7 +248,14 @@ int AllocateIncreaseMemoryList(SinglyLinkedList* sLinkList) {
 int AllocateLeaseMemoryList(SinglyLinkedList* sLinkList) {
     SinglyLinkListOK(sLinkList);
 
-
+    int ind_of_empty = FindEmptyIndex(sLinkList);
+    int cur_ind      = ind_of_empty + 1;
+    while (cur_ind < sLinkList->capacity) {
+        if (sLinkList->list[cur_ind].index == -1) {
+            
+        }
+        ++cur_ind;
+    }
 
     SinglyLinkListOK(sLinkList);
 
@@ -268,8 +282,7 @@ int SinglyLinkedListPushAfterInd(SinglyLinkedList* sLinkList, SINGLY_LINKED_LIST
     } else if (sLinkList->tail->index == ind_push_after) {
         return SinglyLinkedListPushTail(sLinkList, val_push);
     } else {
-        SINGLY_LINKED_LIST index_find_empty = 0;
-        while(sLinkList->list[index_find_empty].index != -1) ++index_find_empty;
+        int index_find_empty = FindEmptyIndex(sLinkList);
 
         sLinkList->list[index_find_empty].index = sLinkList->list[ind_push_after].index;
         sLinkList->list[index_find_empty].elem  = val_push;
@@ -408,6 +421,21 @@ int FindPreviousIndex(SinglyLinkedList* sLinkList, int index) {
     }
 
     return ind_previous;
+}
+
+/**
+ * @brief Function to find empty index in singly link list
+ * 
+ * @param sLinkList - pointer to the singly link list
+ * @return int - index of empty elem
+ */
+int FindEmptyIndex(SinglyLinkedList* sLinkList) {
+    SinglyLinkListOK(sLinkList);
+
+    int index_find_empty = 0;
+    while(sLinkList->list[index_find_empty].index != -1) ++index_find_empty;
+
+    return index_find_empty;
 }
 
 /**

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\bin\\_mtLib\\logger"
+		},
+		{
+			"path": "..\\bin\\_mtLib\\base_lib"
+		}
+	],
+	"settings": {}
+}
